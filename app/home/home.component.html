@@ -1,0 +1,184 @@
+﻿<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">
+        <h1>Hi {{currentUser.firstName}}!</h1>
+      </a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li>
+        <a [routerLink]="['/login']">
+          <span class="glyphicon glyphicon-log-in"></span>
+          <h5> Logout</h5>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<p-tabView>
+  <p-tabPanel header="Data Table" leftIcon="fa-table">
+    <div class="ui-grid ui-grid-pad ui-grid-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>UserId</th>
+            <th>Password</th>
+            <th>Delete</th>
+            <th>Edit</th>
+            <th>Change Password</th>
+            <!--          <th>Reorder Role</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{user.firstName}}</td>
+            <td>{{user.lastName}}</td>
+            <td>{{user.username}}</td>
+            <td>{{user.password}}</td>
+
+
+            <td>
+              <button class="btn btn-primary" (click)="deleteUser(user.id)">Delete</button>
+            </td>
+
+
+            <td>
+              <i class="fa fa-edit" (click)="editDetails()" style="cursor:pointer"></i>
+            </td>
+
+
+            <form name="form" (ngSubmit)="register(user.id)" #f="ngForm" novalidate>
+
+              <td>
+                <div class="form-group">
+                  <div class="ui-grid-row">
+                    <div class="ui-grid-col-4">
+                      <input class="form-control" name="password" [(ngModel)]="user.password" #password="ngModel" />
+                    </div>
+                    <div class="ui-grid-col-8">
+                      <button class="btn btn-info">Change It</button>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </form>
+            <!-- 
+            <form name="form" (ngSubmit)="register2(user.id)" #f="ngForm" novalidate>    
+              <td>
+                <div class="form-group">
+                  <div class="ui-grid-row">
+                    <div class="ui-grid-col-4">
+                      <input  class="form-control" name="lastName" [(ngModel)]="user.lastName" #lastName="ngModel" />
+                    </div>
+                    <div class="ui-grid-col-8">
+                      <button class="btn btn-primary">Reorder Role</button>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </form> -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+
+
+    <!--dialogue box-->
+    <p-dialog header="Edit Details" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" width="450"
+      (onAfterHide)="onDialogHide()">
+      <div class="ui-grid ui-grid-responsive ui-grid-pad" style="font-size:16px;text-align:center;padding:50px">
+        <form name="form" (ngSubmit)="register()" #f="ngForm" novalidate>
+          <div class="form-group">
+
+            <!--  <div class="ui-grid-row">
+              <div class="ui-grid-col-4">Delete User:</div>
+              <div class="ui-grid-col-8">
+                <button class="btn btn-primary" (click)="deleteUser(user.id)">Delete</button>
+              </div>
+            </div>
+            <div class="ui-grid-row">
+              <div class="ui-grid-col-4">
+                <br>
+              </div>
+              <div class="ui-grid-col-8">
+                <br>
+              </div>
+            </div> 
+            <div class="ui-grid-row">
+              <div class="ui-grid-col-4">
+                <input class="form-control" name="password" [(ngModel)]="model.password" #password="ngModel" />
+              </div>
+              <div class="ui-grid-col-8">
+                <button class="btn btn-success">Change Password</button>
+              </div>
+            </div>
+            <div class="ui-grid-row">
+              <div class="ui-grid-col-4">
+                <br>
+              </div>
+              <div class="ui-grid-col-8">
+                <br>
+              </div>
+            </div>-->
+            <div class="ui-grid-row" (ngSubmit)="register2(user.id)">
+              
+                <div class="ui-grid-col-4">
+                  <select >
+                    <!-- input not taken because didnt know how to go ahead from here-->
+                    <option *ngFor="let user of users" >{{user.lastName}}</option>
+                  </select>
+                </div>
+
+                <div class="ui-grid-col-8">
+                  <button class="btn btn-success">Reorder Role</button>
+                </div>
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </p-dialog>
+  </p-tabPanel>
+
+
+
+  <!--Tab 2-->
+  <p-tabPanel header="Div Tabs" leftIcon="fa-tasks">
+    <div class="ui-grid ui-grid-pad ui-grid-responsive">
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-6 ui-widget-content" style="border-right:0 none">
+          <ul style="margin:0;padding:0">
+            <li *ngFor="let car of availableCars" class="ui-state-default ui-helper-clearfix" pDraggable="cars" (onDragStart)="dragStart($event,car)"
+              (onDragEnd)="dragEnd($event)">
+              <i class="fa fa-arrows fa-2x" style="float:right;margin-top:8px"></i>
+              <img src="assets/showcase/images/demo/car/{{car.brand}}.png" style="float:left" draggable="false">
+              <div style="margin:8px 0 0 8px;float:left">
+                <!-- {{user.username}} - {{user.firstName}} -->
+                {{car.year}} - {{car.brand}}
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="ui-grid-col-6 ui-widget-content" pDroppable="cars" (onDrop)="drop($event)" [ngClass]="{'ui-state-highlight':draggedCar}">
+          <p-dataTable [value]="selectedCars">
+            <p-column field="vin" header="Vin"></p-column>
+            <p-column field="year" header="Year"></p-column>
+            <p-column field="brand" header="Brand"></p-column>
+            <p-column field="color" header="Color"></p-column>
+          </p-dataTable>
+          <!-- <p-dataTable [value]="selectedUser">
+            <p-column field="firstName" header="firstName"></p-column>
+            <p-column field="lastName" header="lastName"></p-column>
+            <p-column field="username" header="username"></p-column>
+            <p-column field="password" header="password"></p-column>
+          </p-dataTable> -->
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+</p-tabView>
