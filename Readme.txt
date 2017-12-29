@@ -25,3 +25,8 @@ Challenges faced:
 4. With every primeng model added it gave rise to errors had to solve it using the console again.
 5. Every other kind of error was solved by previous experience and/or  googling the errors
 
+To Run:
+
+npm install
+
+npm start
